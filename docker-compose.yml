@@ -1,0 +1,83 @@
+version: "3"
+
+services:
+  Controller:
+    image: flowctrltest
+    volumes:
+      - $pwd/src:/code
+    command: java -cp /code Controller
+    networks:
+      - flowctrlNet
+  ForwardingService:
+    image: flowctrltest
+    volumes:
+      - $pwd/src:/code
+    command: java -cp /code ForwardingService
+    networks:
+      - flowctrlNet
+
+  RouterOne:
+    image: flowctrltest
+    volumes:
+      - $pwd/src:/code
+    networks:
+      - flowctrlNet
+    command: java -cp /code Router 1
+  RouterTwo:
+    image: flowctrltest
+    volumes:
+      - $pwd/src:/code
+    networks:
+      - flowctrlNet
+    command: java -cp /code Router 2
+  RouterThree:
+    image: flowctrltest
+    volumes:
+      - $pwd/src:/code
+    networks:
+      - flowctrlNet
+    command: java -cp /code Router 3
+  RouterFour:
+    image: flowctrltest
+    volumes:
+      - $pwd/src:/code
+    networks:
+      - flowctrlNet
+    command: java -cp /code Router 4
+  RouterFive:
+    image: flowctrltest
+    volumes:
+      - $pwd/src:/code
+    networks:
+      - flowctrlNet
+    command: java -cp /code Router 5
+  RouterSix:
+    image: flowctrltest
+    volumes:
+      - $pwd/src:/code
+    networks:
+      - flowctrlNet
+    command: java -cp /code Router 6
+  EndpointOne:
+    image: flowctrltest
+    volumes:
+      - $pwd/src:/code
+    command: java -cp /code Application EndpointOne
+    networks:
+      - flowctrlNet
+  EndpointTwo:
+    image: flowctrltest
+    volumes:
+      - $pwd/src:/code
+    command: java -cp /code Application EndpointTwo
+    networks:
+      - flowctrlNet
+
+  wireshark:
+    image: wiresharkcontainer
+    command: wireshark --display host.docker.internal:0
+    networks:
+      - flowctrlNet
+networks:
+  flowctrlNet:
+    driver: bridge

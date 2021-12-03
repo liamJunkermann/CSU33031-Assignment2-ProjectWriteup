@@ -68,12 +68,13 @@
 \renewcommand\footrulewidth{0.4pt} % Size of the footer rule
 
 \setlength\parindent{0pt} % Removes all indentation from paragraphs
-\newcommand{\assignmentTitle}{Assignment 1}
+\newcommand{\assignmentTitle}{Assignment 2 - Flow Forwarding}
 \newcommand{\moduleCode}{CSU33031} 
 \newcommand{\moduleName}{Computer Networks} 
 \newcommand{\authorName}{Liam Junkermann} 
 \newcommand{\authorID}{19300141} 
 \newcommand{\reportDate}{\today}
+\renewcommand{\abstractname}{Introduction}
 
 \title{
     \vspace{-1in}
@@ -97,37 +98,50 @@
 \begin{document}
     \lstset{language=bash, float=h, captionpos=b, frame=single, numbers=left, numberblanklines=false, numberstyle=\tiny, numbersep=1mm, framexleftmargin=3mm, xleftmargin=5mm, aboveskip=3mm, breaklines=true}
     \captionsetup{width=.8\linewidth} 
-    
+
     \maketitle
+    \begin{abstract}
+        The goal of this assignment was to explore the use of flow control in networks, and the decisions made by routers and services to forward packet flow to the necessary clients and applications. This report will outline the design, implementation, and learnings associated with the development of this Flow Forwarding assignment. In outlining the design and implementation, this report will also analyse the strengths and weaknesses of the developed system.
+    \end{abstract}
     \tableofcontents
     \newpage
     
-    \section{Introduction}
-    \label{sec:Intro}
-    
-    
     \section{Design and Implementation}
     \label{sec:Design}
-    
-    \subsection{The Packet structure}
+    The design of this system is quite simple. There is a centralised \code{Controller} which manages connections to, and from routers. Multiple \code{Router}s are set up to handle traffic from various endpoints (\code{Application}). The \code{Controller} relies on the use of a forwarding table to direct traffic appropriately. Forwarding tables store the possible endpoints (transmitting and receiving), and the correct route for the querying \code{Router} to correctly route traffic. This use of a centralised Forwarding Table in the \code{Controller} also allows for the \code{Router} to use fewer resources storing route information for routes it will never use. 
+
+    \subsection{The Packet Structure}
     \label{subsec:PacketStructure}
+    Much like the previous assignment, all the packets in this system are the same size, with Type-Length-Value (TLV) headers. This allows \code{Router}s (and the \code{Controller}), to determine where the packet is originating from, and in turn where the value should be sent.
     
-    
-    \subsection{The Communication Method}
+    \subsection{Network Components}
     \label{subsec:communication}
-    
+    This system is built using four basic components -- \code{Application}, \code{Controller}, \code{ForwardingService}, and \code{Router} -- which are deployed in different numbers and configurations across the network topology. These four components work together to demonstrate Flow Forwarding.
+    \begin{description}
+        \item[\code{Application}] This is the Client of the network - an interactive user terminal to send and recieve messages from the other client (or other parts of the network). The \code{Application} asks the user where they would like to send their message, then what content they would like to send. This information is then compiled into a packet sent to the \code{ForwardingService}. The \code{Application} then waits for a response packet before determining what it will do next. The \code{Application} then repeats this process of waiting for input or a packet indefinitely.
+        \item[\code{Controller}] This is effectively the master router of the network. When the \code{Router} has not saved where to send an unknown packet, it will check with the \code{Controller} where to send the packet. The controller initialises the Forwarding Table and address table on load. Then awaits contact from a \code{Router} before then responding with the needed route -- repeating this process until shutdown.
+        \item[\code{ForwardingService}] is the bridge between the \code{Applications}s and the \code{Router} network. It routes traffic from the querying \code{Application} to the correct \code{Router} where the \code{Router} logic takes over to route the packet the rest of the way. In a larger system the \code{ForwardingService} may also be used to format or augment data in order to send it into a larger array of routers or another third party system.
+        \item[\code{Router}] is the work horse of the whole system. An array of \code{Router}s is deployed in order to manage traffic from various \code{Application} instances. The \code{Router} leverages the \code{Controller} to inform where it sends packages, and the distributed nature of the \code{Router}s in the network topology allows for resource efficient routing and flow forwarding.\\
+        Packets are sent to the \code{Router} and if it does not recognise the packet it will consult the \code{Controller}. This then prompts an update of the local flow table for future use. The \code{Router} then sends the necessary packets and awaits the next incoming packet.
+    \end{description}
     
     \newpage
-    \section{Deployment Topology}
+    \section{Deployment Approach and Topology}
     \label{sec:Topology}
+    The deployment of this network is managed with \hyperlink{https://docker.com}{Docker's} \hyperlink{https://docs.docker.com/compose/}{\code{Docker Compose}}. This allows for one command to create the demonstration network of components rather than many (or chained) commands and allows for quicker tweaks to the entire system. Docker compose relies on a \code{yml} file to properly set up the network:
+    \lstinputlisting{docker-compose.yml}
+    This docker-compose file setups all the relevant services, provided that the host machine has properly built the code and is running the suitable x11 host. The \code{docker-compose} file also relies on a custom docker image "flowctrltest" defined below:
+    \lstinputlisting{flowctrltest_Dockerfile}
+    This creates a docker container with all the necessary dependencies to run the services required, as well as the host command which allows the terminal to run on the host machine. 
     
     \newpage
     \section{Summary and Reflection}
     \label{sec:summary}
     
     \subsection{The systems strengths and weaknesses}
+    The general structure of this solution results in an effecient and scalable solution to the problem. In practice, though, the current approach to generating services and the setup required is a bit cumbersome. Each node needs to be manually created and added to the static \code{forwardingTable} and \code{addressTable} respectively. In a more developed solution the code could be changed to utilise the \code{Controller} to manage and spin up \code{Router}s as needed, and have the endpoint \code{Application}s responsible for connecting to the correct \code{Router}, who would then manage the \code{Controller} table updating through some kind of initialisation process.
     
     \subsection{Learnings from Assignment 2}
-    
+    The biggest extra learning gained from this assignment was learning to utilising \code{docker-compose} to more efficiently generate and test services. Using this solution allowed me to see the logs and manage of all the services from one terminal in contrast to the ever-growing open terminals I had before. Learning to use \code{docker-compose} was crucial in being able to more efficiently test and ensure the solution worked. Again, I ran into troubles with getting wireshark working due to the macOS "security containers" and this is something perhaps using another machine might resolve which is something I will explore in the future.
     
 \end{document}
