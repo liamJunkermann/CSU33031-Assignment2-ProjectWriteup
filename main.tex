@@ -1,0 +1,133 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+
+\usepackage{fancyhdr} 
+\usepackage{lastpage} 
+\usepackage{extramarks} 
+\usepackage{graphicx,color}
+\usepackage{anysize}
+\usepackage{amsmath}
+\usepackage{natbib}
+\usepackage{caption}
+\usepackage{listings}
+\usepackage{float}
+\usepackage{url}
+\usepackage{listings}
+\usepackage[svgnames]{xcolor}
+\usepackage[colorlinks=true, linkcolor=Black, urlcolor=Black]{hyperref}
+
+\textwidth=6.5in
+\linespread{1.0} % Line spacing
+\renewcommand{\familydefault}{\sfdefault}
+
+\newcommand{\includecode}[4]{\lstinputlisting[float,floatplacement=H, caption={[#1]#2}, captionpos=b, frame=single, label={#3}]{#4}}
+
+%% includescalefigure:
+%% \includescalefigure{label}{short caption}{long caption}{scale}{filename}
+%% - includes a figure with a given label, a short caption for the table of contents and a longer caption that describes the figure in some detail and a scale factor 'scale'
+\newcommand{\includescalefigure}[5]{
+\begin{figure}[H]
+\centering
+\includegraphics[width=#4\linewidth]{#5}
+\captionsetup{width=.8\linewidth} 
+\caption[#2]{#3}
+\label{#1}
+\end{figure}
+}
+
+%% includefigure:
+%% \includefigure{label}{short caption}{long caption}{filename}
+%% - includes a figure with a given label, a short caption for the table of contents and a longer caption that describes the figure in some detail
+\newcommand{\includefigure}[4]{
+\begin{figure}[H]
+\centering
+\includegraphics{#4}
+\captionsetup{width=.8\linewidth} 
+\caption[#2]{#3}
+\label{#1}
+\end{figure}
+}
+
+%% Code formatting:
+\usepackage{xcolor}
+\definecolor{light-gray}{gray}{0.95}
+\newcommand{\code}[1]{\colorbox{light-gray}{\texttt{#1}}}
+
+%%------------------------------------------------
+%% Parameters
+%%------------------------------------------------
+% Set up the header and footer
+\pagestyle{fancy}
+\lhead{\authorName} % Top left header
+\chead{\moduleCode\ - \assignmentTitle} % Top center header
+\rhead{\firstxmark} % Top right header
+\lfoot{\lastxmark} % Bottom left footer
+\cfoot{} % Bottom center footer
+\rfoot{Page\ \thepage\ of\ \pageref{LastPage}} % Bottom right footer
+\renewcommand\headrulewidth{0.4pt} % Size of the header rule
+\renewcommand\footrulewidth{0.4pt} % Size of the footer rule
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs
+\newcommand{\assignmentTitle}{Assignment 1}
+\newcommand{\moduleCode}{CSU33031} 
+\newcommand{\moduleName}{Computer Networks} 
+\newcommand{\authorName}{Liam Junkermann} 
+\newcommand{\authorID}{19300141} 
+\newcommand{\reportDate}{\today}
+
+\title{
+    \vspace{-1in}
+    \begin{figure}[!ht]
+    \flushleft
+    \includegraphics[width=0.4\linewidth]{reduced-trinity.png}
+    \end{figure}
+    \vspace{-0.5cm}
+    \hrulefill \\
+    \vspace{1cm}
+    \textmd{\textbf{\moduleCode\ \moduleName}}\\
+    \textmd{\textbf{\assignmentTitle}}\\
+    \textmd{\authorName\ - \authorID}\\
+    \textmd{\reportDate}\\
+    \vspace{0.5cm}
+    \hrulefill \\
+}
+\date{}
+\author{}
+
+\begin{document}
+    \lstset{language=bash, float=h, captionpos=b, frame=single, numbers=left, numberblanklines=false, numberstyle=\tiny, numbersep=1mm, framexleftmargin=3mm, xleftmargin=5mm, aboveskip=3mm, breaklines=true}
+    \captionsetup{width=.8\linewidth} 
+    
+    \maketitle
+    \tableofcontents
+    \newpage
+    
+    \section{Introduction}
+    \label{sec:Intro}
+    
+    
+    \section{Design and Implementation}
+    \label{sec:Design}
+    
+    \subsection{The Packet structure}
+    \label{subsec:PacketStructure}
+    
+    
+    \subsection{The Communication Method}
+    \label{subsec:communication}
+    
+    
+    \newpage
+    \section{Deployment Topology}
+    \label{sec:Topology}
+    
+    \newpage
+    \section{Summary and Reflection}
+    \label{sec:summary}
+    
+    \subsection{The systems strengths and weaknesses}
+    
+    \subsection{Learnings from Assignment 2}
+    
+    
+\end{document}
